@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AQA Philosophy Flashcards</title>
+  <title>AQA A-Level Philosophy Revision App</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -14,8 +14,8 @@
       --border: #e2e8f0;
       --red: #ef4444;
       --amber: #f59e0b;
-      --green: #10b981;
       --blue: #3b82f6;
+      --green: #10b981;
     }
 
     body {
@@ -56,7 +56,7 @@
     }
 
     .btn-primary { background: var(--primary); color: white; border: none; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     .card-box {
       background: #f1f5f9;
@@ -114,25 +114,25 @@
 
 <div class="container">
 
-  <!-- STEP 1: CHOOSE TOPIC / MODULE -->
+  <!-- SCREEN 1: TOPICS -->
   <div id="screen-topics">
     <h1>AQA A-Level Philosophy</h1>
     <p class="muted">Select a module to practise:</p>
     <div id="module-buttons"></div>
   </div>
 
-  <!-- STEP 2: CHOOSE PRACTICE MODE -->
+  <!-- SCREEN 2: MODES -->
   <div id="screen-modes" class="hidden">
     <button class="btn" onclick="showScreen('screen-topics')">← Choose Different Module</button>
     <h2 id="module-title">Module</h2>
-    <div class="badge" id="weak-badge">0 weak keywords</div>
+    <div class="badge" id="weak-badge">0 weak keywords needing practice</div>
 
     <button class="btn btn-primary" onclick="startSession('all')">Practise All Keywords</button>
     <button class="btn" id="btn-weak" onclick="startSession('weak')">Practise Weak Keywords (Rated 1–2)</button>
     <button class="btn" onclick="startSession('quick')">Quick Test (5 Random)</button>
   </div>
 
-  <!-- STEP 3: FLASHCARD & CONFIDENCE RATING -->
+  <!-- SCREEN 3: PRACTICE -->
   <div id="screen-practice" class="hidden">
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <span class="muted" id="progress-indicator">Card 1 of 10</span>
@@ -157,7 +157,7 @@
     </div>
   </div>
 
-  <!-- STEP 4: SUMMARY -->
+  <!-- SCREEN 4: SUMMARY -->
   <div id="screen-summary" class="hidden">
     <h2>Session Complete! 🎉</h2>
     <p class="muted" id="summary-msg"></p>
@@ -167,13 +167,90 @@
 </div>
 
 <script>
-  // Sample Data (App will build menu dynamically from whatever TSV/CSV dataset is loaded)
+  // Complete Master Dataset across all modules
   const cardsData = [
-    { Card_ID: "EP-001", Module: "Epistemology", Term: "A posteriori argument", Definition: "An argument in which at least one premise is a posteriori." },
-    { Card_ID: "EP-023", Module: "Epistemology", Term: "Direct realism", Definition: "The view that the immediate objects of perception are mind-independent objects and their properties." },
-    { Card_ID: "EP-084", Module: "Epistemology", Term: "Tabula rasa", Definition: "Blank slate - the empiricist view that no concepts or truths exist within the mind at birth." },
+    // METAPHYSICS OF GOD
     { Card_ID: "MG-001", Module: "Metaphysics of God", Term: "A posteriori argument", Definition: "An argument in which at least one premise is a posteriori." },
-    { Card_ID: "MP-001", Module: "Moral Philosophy", Term: "Act utilitarianism", Definition: "An action is morally right if and only if it produces the greatest net balance of pleasure over pain." }
+    { Card_ID: "MG-002", Module: "Metaphysics of God", Term: "A priori argument", Definition: "An argument in which all of the premises are a priori." },
+    { Card_ID: "MG-003", Module: "Metaphysics of God", Term: "Analytic truth", Definition: "A proposition whose truth depends only upon the meanings of its constituent terms/concepts." },
+    { Card_ID: "MG-004", Module: "Metaphysics of God", Term: "Anomalous monism", Definition: "The view that mental events are physical events, but mental types cannot be reduced to physical types because there are no strict psychophysical laws." },
+    { Card_ID: "MG-005", Module: "Metaphysics of God", Term: "Anselm's ontological argument", Definition: "An a priori argument that God is 'that than which nothing greater can be conceived'. Since existing in reality is greater than existing in the mind alone, God must exist in reality." },
+    { Card_ID: "MG-006", Module: "Metaphysics of God", Term: "Aquinas' Five Ways", Definition: "Five a posteriori arguments for the existence of God, including the argument from motion, first cause, contingency, degree, and design/teleology." },
+    { Card_ID: "MG-007", Module: "Metaphysics of God", Term: "Atheism", Definition: "The belief that God does not exist." },
+    { Card_ID: "MG-008", Module: "Metaphysics of God", Term: "Cognitivism (religious language)", Definition: "The view that religious language expresses beliefs/propositions that are capable of being true or false (truth-apt)." },
+    { Card_ID: "MG-009", Module: "Metaphysics of God", Term: "Cosmological argument", Definition: "An argument for the existence of God that claims the existence of the universe (or contingent facts about it) requires a necessary first cause or supreme explanation." },
+    { Card_ID: "MG-010", Module: "Metaphysics of God", Term: "Design argument (Teleological argument)", Definition: "An argument that complex, ordered, or purpose-driven features of the universe point to the existence of an intelligent designer (God)." },
+    { Card_ID: "MG-011", Module: "Metaphysics of God", Term: "Euthyphro dilemma", Definition: "A dilemma challenging divine command theory: Is something good because God commands it, or does God command it because it is good?" },
+    { Card_ID: "MG-012", Module: "Metaphysics of God", Term: "Everlasting", Definition: "Existing throughout all time, having no beginning and no end in time." },
+    { Card_ID: "MG-013", Module: "Metaphysics of God", Term: "Evidential problem of evil", Definition: "An a posteriori challenge arguing that the amount, intensity, and unfair distribution of suffering in the world makes the existence of an omnipotent, omnibenevolent God highly improbable." },
+    { Card_ID: "MG-014", Module: "Metaphysics of God", Term: "Eternity / Eternal (timelessness)", Definition: "Existing outside of time altogether, possessing no temporal parts, past, or future." },
+    { Card_ID: "MG-015", Module: "Metaphysics of God", Term: "Free will defence", Definition: "A response to the problem of evil claiming that God permits moral evil because giving humans genuine free will is a greater good, and moral evil arises from human misuse of free will." },
+    { Card_ID: "MG-016", Module: "Metaphysics of God", Term: "Gaunilo's island objection", Definition: "An objection to Anselm's ontological argument using a perfect island to show that one cannot define things into existence purely from a concept." },
+    { Card_ID: "MG-017", Module: "Metaphysics of God", Term: "Hume's criticisms of the cosmological argument", Definition: "Hume's objections challenging the causal adequacy principle, the necessity of a first cause, and arguing that the universe itself could be a necessary existent or an infinite regress." },
+    { Card_ID: "MG-018", Module: "Metaphysics of God", Term: "Hume's criticisms of the teleological argument", Definition: "Hume's objections arguing that the analogy between machines and the universe is weak, that order can arise naturally, and that design does not prove a uniquely perfect designer." },
+    { Card_ID: "MG-019", Module: "Metaphysics of God", Term: "Incorporeal", Definition: "Lacking a physical body or material substance; purely spiritual or mental." },
+    { Card_ID: "MG-020", Module: "Metaphysics of God", Term: "Kant's objection to ontological arguments", Definition: "Kant's claim that 'existence is not a predicate' because saying something exists adds no content or new property to the concept of that thing." },
+    { Card_ID: "MG-021", Module: "Metaphysics of God", Term: "Logical problem of evil", Definition: "An a priori challenge claiming that the existence of an omnipotent, omniscient, and omnibenevolent God is logically incompatible with the existence of any evil." },
+    { Card_ID: "MG-022", Module: "Metaphysics of God", Term: "Moral evil", Definition: "Suffering caused by the deliberate actions or negligence of free human agents (e.g. murder, cruelty)." },
+    { Card_ID: "MG-023", Module: "Metaphysics of God", Term: "Natural evil", Definition: "Suffering caused by natural processes and disasters independent of human action (e.g. earthquakes, diseases)." },
+    { Card_ID: "MG-024", Module: "Metaphysics of God", Term: "Non-cognitivism (religious language)", Definition: "The view that religious statements do not express true/false propositions, but instead express emotions, attitudes, prescriptions, or bliks." },
+    { Card_ID: "MG-025", Module: "Metaphysics of God", Term: "Omnibenevolence", Definition: "The attribute of being all-loving, morally perfect, and infinitely good." },
+    { Card_ID: "MG-026", Module: "Metaphysics of God", Term: "Omnipotence", Definition: "The attribute of being all-powerful (traditionally defined as able to do anything that is logically possible)." },
+    { Card_ID: "MG-027", Module: "Metaphysics of God", Term: "Omniscience", Definition: "The attribute of knowing all propositions that are true or possessing all possible knowledge." },
+    { Card_ID: "MG-028", Module: "Metaphysics of God", Term: "Ontological argument", Definition: "An a priori deductive argument asserting that the very concept or definition of God entails God's necessary existence." },
+    { Card_ID: "MG-029", Module: "Metaphysics of God", Term: "Paley's watchmaker analogy", Definition: "An argument that just as finding a complex watch implies a skilled watchmaker, the intricate complexity and order of the natural world implies a supreme designer." },
+    { Card_ID: "MG-030", Module: "Metaphysics of God", Term: "Paradox of the stone", Definition: "A puzzle challenging omnipotence: Can God create a stone so heavy that God cannot lift it?" },
+    { Card_ID: "MG-031", Module: "Metaphysics of God", Term: "Pascal's wager", Definition: "A pragmatic argument proposing that it is rational to bet on God's existence because the potential gain (eternal life) is infinite compared to finite losses." },
+    { Card_ID: "MG-032", Module: "Metaphysics of God", Term: "Problem of evil", Definition: "The philosophical problem of reconciling the existence of evil and suffering with an omnipotent, omniscient, and omnibenevolent God." },
+    { Card_ID: "MG-033", Module: "Metaphysics of God", Term: "Soul-making theodicy (Hick)", Definition: "John Hick's view that God created a world containing suffering so that human beings could grow spiritually and develop moral character through adversity." },
+    { Card_ID: "MG-034", Module: "Metaphysics of God", Term: "Teleological argument", Definition: "An argument for God's existence based on evidence of design, purpose, and order in the natural world." },
+    { Card_ID: "MG-035", Module: "Metaphysics of God", Term: "Theism", Definition: "The belief in a personal, supreme deity who created and intervenes in the universe." },
+    { Card_ID: "MG-036", Module: "Metaphysics of God", Term: "Verification principle (A.J. Ayer)", Definition: "The logical positivist criterion stating that a statement is meaningful if and only if it is an analytic truth or empirically verifiable." },
+
+    // METAPHYSICS OF MIND
+    { Card_ID: "MM-001", Module: "Metaphysics of Mind", Term: "Behaviorism (Analytical / Philosophical)", Definition: "The view that mental states are reducible to or identical with behavioral dispositions or bodily movements." },
+    { Card_ID: "MM-002", Module: "Metaphysics of Mind", Term: "Category mistake (Ryle)", Definition: "Gilbert Ryle's criticism of Cartesian dualism: treating the mind as if it were an extra 'thing' alongside bodily actions, rather than an aspect of how body actions are organized." },
+    { Card_ID: "MM-003", Module: "Metaphysics of Mind", Term: "Chalmers' philosophical zombies", Definition: "A thought experiment describing physically identical human duplicates without conscious experience (qualia), used to argue against physicalism." },
+    { Card_ID: "MM-004", Module: "Metaphysics of Mind", Term: "Dualism", Definition: "The view that the mind and the body are two distinct substances or distinct types of properties." },
+    { Card_ID: "MM-005", Module: "Metaphysics of Mind", Term: "Eliminative materialism (Churchland)", Definition: "The radical physicalist view that folk-psychological concepts (like belief, desire, and pain) do not correspond to real neurophysiological states and should be eliminated." },
+    { Card_ID: "MM-006", Module: "Metaphysics of Mind", Term: "Epiphenomenalism", Definition: "The view that physical brain states cause mental states, but mental states have no causal effect back on physical states." },
+    { Card_ID: "MM-007", Module: "Metaphysics of Mind", Term: "Folk psychology", Definition: "The commonsense framework of mental concepts (beliefs, desires, hopes) used by everyday people to explain and predict human behavior." },
+    { Card_ID: "MM-008", Module: "Metaphysics of Mind", Term: "Functionalism", Definition: "The view that mental states are defined by their functional roles (their causal relations to sensory inputs, other mental states, and behavioral outputs), regardless of their physical realization." },
+    { Card_ID: "MM-009", Module: "Metaphysics of Mind", Term: "Ghost in the machine", Definition: "Ryle's derogatory term for Descartes' substance dualist view that an immaterial mind inhabits and controls a physical body." },
+    { Card_ID: "MM-010", Module: "Metaphysics of Mind", Term: "Hard problem of consciousness", Definition: "The problem of explaining how and why physical brain processes give rise to subjective, qualitative conscious experiences (qualia)." },
+    { Card_ID: "MM-011", Module: "Metaphysics of Mind", Term: "Interactionist dualism", Definition: "The view that the mind and body are distinct substances/properties that causally interact with each other in both directions." },
+    { Card_ID: "MM-012", Module: "Metaphysics of Mind", Term: "Introspection", Definition: "The direct, private examination of one's own conscious thoughts, feelings, and mental states." },
+    { Card_ID: "MM-013", Module: "Metaphysics of Mind", Term: "Inverted qualia", Definition: "A thought experiment imagining two people who see colors differently (e.g. one sees red where the other sees green) despite identical behavior and physical responses." },
+    { Card_ID: "MM-014", Module: "Metaphysics of Mind", Term: "Knowledge argument (Mary the color scientist)", Definition: "Jackson's thought experiment: Mary knows all physical facts about color vision while in a black-and-white room; upon leaving, she learns what red looks like, showing physical facts do not exhaust conscious experience." },
+    { Card_ID: "MM-015", Module: "Metaphysics of Mind", Term: "Mind-brain type identity theory", Definition: "The physicalist view that types of mental states are identical to types of physical brain states (e.g. pain is C-fiber firing)." },
+    { Card_ID: "MM-016", Module: "Metaphysics of Mind", Term: "Multiple realizability", Definition: "The claim that the same mental state (like pain) can be instantiated or realized by different physical structures (e.g. human brains, alien biology, artificial networks)." },
+    { Card_ID: "MM-017", Module: "Metaphysics of Mind", Term: "Physicalism", Definition: "The view that everything that exists is ultimately physical, or supervenes on physical properties and entities." },
+    { Card_ID: "MM-018", Module: "Metaphysics of Mind", Term: "Property dualism", Definition: "The view that there is only one physical substance, but it can possess two fundamentally distinct kinds of properties: physical properties and non-physical mental properties." },
+    { Card_ID: "MM-019", Module: "Metaphysics of Mind", Term: "Qualia", Definition: "The subjective, qualitative, intrinsic 'what-it-is-like' aspects of conscious experiences (e.g. the redness of red, the taste of coffee)." },
+    { Card_ID: "MM-020", Module: "Metaphysics of Mind", Term: "Substance dualism (Descartes)", Definition: "The view that minds and bodies are two fundamentally distinct types of substances: minds are unextended thinking substances, and bodies are extended non-thinking physical substances." },
+    { Card_ID: "MM-021", Module: "Metaphysics of Mind", Term: "Supervenience", Definition: "A relationship between properties: mental properties supervene on physical properties if there can be no mental difference without a physical difference." },
+
+    // MORAL PHILOSOPHY
+    { Card_ID: "MP-001", Module: "Moral Philosophy", Term: "Act utilitarianism (Bentham)", Definition: "The normative ethical theory stating that an action is morally right if and only if it produces the greatest net balance of pleasure over pain for the greatest number in that specific situation." },
+    { Card_ID: "MP-002", Module: "Moral Philosophy", Term: "Aristotelian virtue ethics", Definition: "An agent-centered ethical framework focusing on developing virtuous character traits through habituation to achieve eudaimonia (flourishing)." },
+    { Card_ID: "MP-003", Module: "Moral Philosophy", Term: "Categorical imperative (Kant)", Definition: "Kant's supreme principle of morality that commands actions as unconditionally necessary, regardless of desires (includes the universal law formula and humanity formula)." },
+    { Card_ID: "MP-004", Module: "Moral Philosophy", Term: "Cognitivism (ethics)", Definition: "The metaethical view that moral judgements express beliefs capable of being true or false (truth-apt)." },
+    { Card_ID: "MP-005", Module: "Moral Philosophy", Term: "Deontology (Kantian ethics)", Definition: "A duty-based ethical framework holding that actions are intrinsically right or wrong, independent of their consequences." },
+    { Card_ID: "MP-006", Module: "Moral Philosophy", Term: "Emotivism (Ayer)", Definition: "A non-cognitivist metaethical theory claiming that moral judgements do not express facts or beliefs, but express emotional attitudes of approval or disapproval (boo/hurrah theory)." },
+    { Card_ID: "MP-007", Module: "Moral Philosophy", Term: "Error theory (Mackie)", Definition: "J.L. Mackie's metaethical view that moral judgements aim to describe objective moral facts, but because objective moral values do not exist, all positive moral claims are strictly false." },
+    { Card_ID: "MP-008", Module: "Moral Philosophy", Term: "Eudaimonia", Definition: "Aristotle's term for the ultimate human good, translated as human flourishing, living well, or fulfillment." },
+    { Card_ID: "MP-009", Module: "Moral Philosophy", Term: "Hedonic calculus", Definition: "Bentham's method of measuring the quantity of pleasure produced by an action using seven factors (intensity, duration, certainty, remoteness, fecundity, purity, extent)." },
+    { Card_ID: "MP-010", Module: "Moral Philosophy", Term: "Hypothetical imperative", Definition: "Kant's conditional practical rule that tells us what to do to achieve a specific personal goal or desire (e.g. if you want to pass, study)." },
+    { Card_ID: "MP-011", Module: "Moral Philosophy", Term: "Is-ought gap (Hume's Guillotine)", Definition: "Hume's observation that moral arguments cannot validly derive an 'ought' (prescriptive statement) purely from an 'is' (descriptive factual statement)." },
+    { Card_ID: "MP-012", Module: "Moral Philosophy", Term: "Moral anti-realism", Definition: "The metaethical view that there are no mind-independent objective moral facts or values." },
+    { Card_ID: "MP-013", Module: "Moral Philosophy", Term: "Moral realism", Definition: "The metaethical view that objective moral facts and values exist independently of human beliefs and attitudes." },
+    { Card_ID: "MP-014", Module: "Moral Philosophy", Term: "Naturalistic fallacy (Moore)", Definition: "G.E. Moore's claim that it is a mistake to define goodness in terms of natural properties (e.g. defining good as pleasant)." },
+    { Card_ID: "MP-015", Module: "Moral Philosophy", Term: "Non-cognitivism (ethics)", Definition: "The metaethical view that moral statements do not express beliefs or propositions with truth-values, but express non-cognitive attitudes like feelings or commands." },
+    { Card_ID: "MP-016", Module: "Moral Philosophy", Term: "Prescriptivism (Hare)", Definition: "R.M. Hare's non-cognitivist view that moral judgements are imperative commands that prescribe action and must be universalisable." },
+    { Card_ID: "MP-017", Module: "Moral Philosophy", Term: "Rule utilitarianism", Definition: "The normative theory that an action is right if it conforms to a set of rules that, if universally followed, would produce the greatest net happiness." },
+    { Card_ID: "MP-018", Module: "Moral Philosophy", Term: "Two-tier utilitarianism (Hare)", Definition: "An ethical approach combining rule utilitarianism for everyday moral decision-making with act utilitarianism for resolving conflicts between rules." },
+    { Card_ID: "MP-019", Module: "Moral Philosophy", Term: "Utilitarianism", Definition: "The consequentialist theory holding that actions are morally right to the extent that they maximize overall well-being or utility." },
+    { Card_ID: "MP-020", Module: "Moral Philosophy", Term: "Virtue", Definition: "A desirable character trait or disposition that enables an individual to act, feel, and judge in accordance with reason and achieve eudaimonia." }
   ];
 
   let selectedModule = "";
