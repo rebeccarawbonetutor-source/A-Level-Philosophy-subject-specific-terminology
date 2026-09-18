@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AQA Philosophy Flashcards</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --border: #e2e8f0;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --green: #10b981;
+      --blue: #3b82f6;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+    }
+
+    h1, h2, h3 { margin-top: 0; }
+    .muted { color: var(--text-muted); font-size: 0.9em; }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary { background: var(--primary); color: white; border: none; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .card-box {
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 24px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+      border: 1px solid var(--border);
+    }
+
+    .term { font-size: 22px; font-weight: 700; }
+    .definition { font-size: 15px; margin-top: 16px; color: #334155; line-height: 1.4; }
+
+    .rating-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .rate-btn {
+      padding: 12px 8px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: none;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .rate-1 { background: var(--red); }
+    .rate-2 { background: var(--amber); }
+    .rate-3 { background: var(--blue); }
+    .rate-4 { background: var(--green); }
+
+    .hidden { display: none !important; }
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background: #fee2e2;
+      color: #991b1b;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- STEP 1: CHOOSE TOPIC / MODULE -->
+  <div id="screen-topics">
+    <h1>AQA A-Level Philosophy</h1>
+    <p class="muted">Select a module to practise:</p>
+    <div id="module-buttons"></div>
+  </div>
+
+  <!-- STEP 2: CHOOSE PRACTICE MODE -->
+  <div id="screen-modes" class="hidden">
+    <button class="btn" onclick="showScreen('screen-topics')">← Choose Different Module</button>
+    <h2 id="module-title">Module</h2>
+    <div class="badge" id="weak-badge">0 weak keywords</div>
+
+    <button class="btn btn-primary" onclick="startSession('all')">Practise All Keywords</button>
+    <button class="btn" id="btn-weak" onclick="startSession('weak')">Practise Weak Keywords (Rated 1–2)</button>
+    <button class="btn" onclick="startSession('quick')">Quick Test (5 Random)</button>
+  </div>
+
+  <!-- STEP 3: FLASHCARD & CONFIDENCE RATING -->
+  <div id="screen-practice" class="hidden">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <span class="muted" id="progress-indicator">Card 1 of 10</span>
+      <button class="btn" style="width: auto; padding: 6px 12px; margin:0;" onclick="showScreen('screen-modes')">Quit</button>
+    </div>
+
+    <div class="card-box">
+      <div class="term" id="card-term">Term</div>
+      <div class="definition hidden" id="card-def">Definition</div>
+    </div>
+
+    <button class="btn btn-primary" id="btn-reveal" onclick="revealDef()">Show Definition</button>
+
+    <div id="rating-section" class="hidden">
+      <p class="muted" style="text-align: center; margin-bottom: 8px;">How confident were you?</p>
+      <div class="rating-grid">
+        <button class="rate-btn rate-1" onclick="rateCurrentCard(1)">🔴 1: No Idea</button>
+        <button class="rate-btn rate-2" onclick="rateCurrentCard(2)">🟡 2: Unsure</button>
+        <button class="rate-btn rate-3" onclick="rateCurrentCard(3)">🟢 3: Fairly</button>
+        <button class="rate-btn rate-4" onclick="rateCurrentCard(4)">🌟 4: Confident</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: SUMMARY -->
+  <div id="screen-summary" class="hidden">
+    <h2>Session Complete! 🎉</h2>
+    <p class="muted" id="summary-msg"></p>
+    <button class="btn btn-primary" onclick="showScreen('screen-modes')">Back to Options</button>
+  </div>
+
+</div>
+
+<script>
+  // Sample Data (App will build menu dynamically from whatever TSV/CSV dataset is loaded)
+  const cardsData = [
+    { Card_ID: "EP-001", Module: "Epistemology", Term: "A posteriori argument", Definition: "An argument in which at least one premise is a posteriori." },
+    { Card_ID: "EP-023", Module: "Epistemology", Term: "Direct realism", Definition: "The view that the immediate objects of perception are mind-independent objects and their properties." },
+    { Card_ID: "EP-084", Module: "Epistemology", Term: "Tabula rasa", Definition: "Blank slate - the empiricist view that no concepts or truths exist within the mind at birth." },
+    { Card_ID: "MG-001", Module: "Metaphysics of God", Term: "A posteriori argument", Definition: "An argument in which at least one premise is a posteriori." },
+    { Card_ID: "MP-001", Module: "Moral Philosophy", Term: "Act utilitarianism", Definition: "An action is morally right if and only if it produces the greatest net balance of pleasure over pain." }
+  ];
+
+  let selectedModule = "";
+  let sessionQueue = [];
+  let currentIndex = 0;
+
+  function getCardProgress(id) {
+    const saved = localStorage.getItem('phil_card_' + id);
+    return saved ? JSON.parse(saved) : { confidence: 0 };
+  }
+
+  function saveCardProgress(id, rating) {
+    localStorage.setItem('phil_card_' + id, JSON.stringify({
+      confidence: rating,
+      lastTested: new Date().toISOString()
+    }));
+  }
+
+  function initApp() {
+    const modules = [...new Set(cardsData.map(c => c.Module))];
+    const container = document.getElementById('module-buttons');
+    container.innerHTML = '';
+
+    modules.forEach(mod => {
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-primary';
+      btn.innerText = mod;
+      btn.onclick = () => chooseModule(mod);
+      container.appendChild(btn);
+    });
+  }
+
+  function chooseModule(mod) {
+    selectedModule = mod;
+    document.getElementById('module-title').innerText = mod;
+
+    const modCards = cardsData.filter(c => c.Module === mod);
+    const weakCards = modCards.filter(c => {
+      const conf = getCardProgress(c.Card_ID).confidence;
+      return conf === 1 || conf === 2;
+    });
+
+    document.getElementById('weak-badge').innerText = `${weakCards.length} weak keywords needing practice`;
+    document.getElementById('btn-weak').disabled = weakCards.length === 0;
+
+    showScreen('screen-modes');
+  }
+
+  function startSession(mode) {
+    let list = cardsData.filter(c => c.Module === selectedModule);
+
+    if (mode === 'weak') {
+      list = list.filter(c => {
+        const conf = getCardProgress(c.Card_ID).confidence;
+        return conf === 1 || conf === 2;
+      });
+    } else if (mode === 'quick') {
+      list = [...list].sort(() => 0.5 - Math.random()).slice(0, 5);
+    }
+
+    sessionQueue = list;
+    currentIndex = 0;
+    displayCard();
+    showScreen('screen-practice');
+  }
+
+  function displayCard() {
+    const card = sessionQueue[currentIndex];
+    document.getElementById('progress-indicator').innerText = `Card ${currentIndex + 1} of ${sessionQueue.length}`;
+    document.getElementById('card-term').innerText = card.Term;
+    document.getElementById('card-def').innerText = card.Definition;
+
+    document.getElementById('card-def').classList.add('hidden');
+    document.getElementById('btn-reveal').classList.remove('hidden');
+    document.getElementById('rating-section').classList.add('hidden');
+  }
+
+  function revealDef() {
+    document.getElementById('card-def').classList.remove('hidden');
+    document.getElementById('btn-reveal').classList.add('hidden');
+    document.getElementById('rating-section').classList.remove('hidden');
+  }
+
+  function rateCurrentCard(rating) {
+    const card = sessionQueue[currentIndex];
+    saveCardProgress(card.Card_ID, rating);
+
+    currentIndex++;
+    if (currentIndex < sessionQueue.length) {
+      displayCard();
+    } else {
+      document.getElementById('summary-msg').innerText = `Great job! You have completed all ${sessionQueue.length} cards in this session. Your progress has been updated automatically.`;
+      showScreen('screen-summary');
+    }
+  }
+
+  function showScreen(id) {
+    ['screen-topics', 'screen-modes', 'screen-practice', 'screen-summary'].forEach(s => {
+      document.getElementById(s).classList.add('hidden');
+    });
+    document.getElementById(id).classList.remove('hidden');
+  }
+
+  initApp();
+</script>
+</body>
+</html>
