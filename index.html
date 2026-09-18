@@ -83,13 +83,14 @@
     }
 
     .rate-btn {
-      padding: 12px 8px;
-      font-size: 14px;
+      padding: 14px 8px;
+      font-size: 13px;
       border-radius: 8px;
       border: none;
       color: white;
       font-weight: 600;
       cursor: pointer;
+      line-height: 1.3;
     }
 
     .rate-1 { background: var(--red); }
@@ -147,12 +148,12 @@
     <button class="btn btn-primary" id="btn-reveal" onclick="revealDef()">Show Definition</button>
 
     <div id="rating-section" class="hidden">
-      <p class="muted" style="text-align: center; margin-bottom: 8px;">How confident were you?</p>
+      <p class="muted" style="text-align: center; margin-bottom: 8px;">How well do you know this term?</p>
       <div class="rating-grid">
-        <button class="rate-btn rate-1" onclick="rateCurrentCard(1)">🔴 1: No Idea</button>
-        <button class="rate-btn rate-2" onclick="rateCurrentCard(2)">🟡 2: Unsure</button>
-        <button class="rate-btn rate-3" onclick="rateCurrentCard(3)">🟢 3: Fairly</button>
-        <button class="rate-btn rate-4" onclick="rateCurrentCard(4)">🌟 4: Confident</button>
+        <button class="rate-btn rate-1" onclick="rateCurrentCard(1)">🔴 1: No understanding</button>
+        <button class="rate-btn rate-2" onclick="rateCurrentCard(2)">🟡 2: Partially understood</button>
+        <button class="rate-btn rate-3" onclick="rateCurrentCard(3)">🔵 3: Mostly understood</button>
+        <button class="rate-btn rate-4" onclick="rateCurrentCard(4)">🟢 4: Full understanding</button>
       </div>
     </div>
   </div>
@@ -167,8 +168,99 @@
 </div>
 
 <script>
-  // Complete Master Dataset across all modules
   const cardsData = [
+    // EPISTEMOLOGY (Full 90 Terms)
+    { Card_ID: "EP-001", Module: "Epistemology", Term: "A posteriori knowledge", Definition: "Knowledge that depends entirely upon sense experience." },
+    { Card_ID: "EP-002", Module: "Epistemology", Term: "A priori knowledge", Definition: "Knowledge that does not depend on sense experience for its justification." },
+    { Card_ID: "EP-003", Module: "Epistemology", Term: "Abduction (Inference to the best explanation)", Definition: "A form of non-deductive argument which infers the best explanation for a given phenomenon." },
+    { Card_ID: "EP-004", Module: "Epistemology", Term: "Absolute skepticism", Definition: "The philosophical view that it is impossible to have any knowledge whatsoever." },
+    { Card_ID: "EP-005", Module: "Epistemology", Term: "Acquaintance knowledge", Definition: "Knowledge of a person, place, or thing derived through direct sensory perception or familiarity." },
+    { Card_ID: "EP-006", Module: "Epistemology", Term: "Analytic proposition", Definition: "A proposition whose truth depends purely upon the meanings of the terms involved." },
+    { Card_ID: "EP-007", Module: "Epistemology", Term: "A posteriori justification", Definition: "Epistemic justification that relies on empirical evidence or sense experience." },
+    { Card_ID: "EP-008", Module: "Epistemology", Term: "A priori justification", Definition: "Epistemic justification that is independent of empirical evidence or sense experience." },
+    { Card_ID: "EP-009", Module: "Epistemology", Term: "Argument from illusion", Definition: "An argument for indirect realism based on the fact that perceptual illusions can make physical objects appear to have properties they do not possess." },
+    { Card_ID: "EP-010", Module: "Epistemology", Term: "Argument from perceptual variation", Definition: "An argument for indirect realism showing that perceived qualities (like color or temperature) vary depending on the observer's condition, hence what we directly perceive cannot be the physical object itself." },
+    { Card_ID: "EP-011", Module: "Epistemology", Term: "Assertion", Definition: "The act of stating a proposition as true." },
+    { Card_ID: "EP-012", Module: "Epistemology", Term: "Attributable responsibility", Definition: "The condition of being held accountable for one's cognitive claims or beliefs." },
+    { Card_ID: "EP-013", Module: "Epistemology", Term: "Bat-sense (thought experiment)", Definition: "An example used in discussions of physicalism and qualia, illustrating the limits of objective descriptions of subjective experience." },
+    { Card_ID: "EP-014", Module: "Epistemology", Term: "Belief", Definition: "A mental state representing an attitude that something is the case or that a proposition is true." },
+    { Card_ID: "EP-015", Module: "Epistemology", Term: "Brain in a vat (BIV)", Definition: "A classic skeptical scenario in which a disembodied brain is stimulated by a supercomputer to experience an illusory reality indistinguishable from normal life." },
+    { Card_ID: "EP-016", Module: "Epistemology", Term: "Cartesian circle", Definition: "The circular reasoning charge leveled against Descartes: he uses clear and distinct ideas to prove God exists, and then uses God's existence to guarantee clear and distinct ideas." },
+    { Card_ID: "EP-017", Module: "Epistemology", Term: "Cartesian skepticism", Definition: "Descartes' methodological doubt targeting all beliefs derived from the senses or reason to find an indubitable foundation." },
+    { Card_ID: "EP-018", Module: "Epistemology", Term: "Clear and distinct ideas", Definition: "Descartes' standard for truth: ideas that are self-evident, transparently clear to the attentive mind, and sharply demarcated from all other ideas." },
+    { Card_ID: "EP-019", Module: "Epistemology", Term: "Cogito, ergo sum", Definition: "Descartes' foundational conclusion: 'I am thinking, therefore I exist'." },
+    { Card_ID: "EP-020", Module: "Epistemology", Term: "Coherentism", Definition: "The theory of epistemic justification holding that a belief is justified if and only if it coheres with a larger system of beliefs." },
+    { Card_ID: "EP-021", Module: "Epistemology", Term: "Concept", Definition: "An abstract idea or mental symbol representing a category or general notion." },
+    { Card_ID: "EP-022", Module: "Epistemology", Term: "Conditional probability", Definition: "The probability of an event given that another event has occurred." },
+    { Card_ID: "EP-023", Module: "Epistemology", Term: "Confirmation bias", Definition: "The tendency to search for, interpret, favor, and recall information in a way that confirms or supports one's prior beliefs." },
+    { Card_ID: "EP-024", Module: "Epistemology", Term: "Consciousness", Definition: "The state or quality of awareness of internal and external existence." },
+    { Card_ID: "EP-025", Module: "Epistemology", Term: "Contextualism", Definition: "The view that the truth-conditions for knowledge claims depend on the conversational context in which they are uttered." },
+    { Card_ID: "EP-026", Module: "Epistemology", Term: "Deduction", Definition: "An argument form where if the premises are true, the conclusion must logically be true." },
+    { Card_ID: "EP-027", Module: "Epistemology", Term: "Demon (Malicious demon / Evil genius)", Definition: "Descartes' skeptical hypothesis of an all-powerful, supremely deceitful being bent on tricking our perceptions." },
+    { Card_ID: "EP-028", Module: "Epistemology", Term: "Direct realism (Naive realism)", Definition: "The direct realist view that physical objects are perceived immediately and directly by the mind, exactly as they are." },
+    { Card_ID: "EP-029", Module: "Epistemology", Term: "Dogmatism", Definition: "The assertion of unproven principles or dogmas as incontrovertibly true without supporting evidence." },
+    { Card_ID: "EP-030", Module: "Epistemology", Term: "Dream argument", Definition: "Descartes' skeptical argument that because sensory experiences during dreams can be indistinguishable from waking life, we can never be certain we are not dreaming." },
+    { Card_ID: "EP-031", Module: "Epistemology", Term: "Empiricism", Definition: "The epistemological view that all knowledge of matters of fact is derived from sensory experience." },
+    { Card_ID: "EP-032", Module: "Epistemology", Term: "Epistemic duty", Definition: "The moral or intellectual obligation to form beliefs responsibly and rationally." },
+    { Card_ID: "EP-033", Module: "Epistemology", Term: "Epistemic luck", Definition: "Instances where a belief is true by coincidence or fortunate circumstance rather than reliable inquiry." },
+    { Card_ID: "EP-034", Module: "Epistemology", Term: "Epistemology", Definition: "The branch of philosophy concerned with the nature, origin, scope, and limits of knowledge." },
+    { Card_ID: "EP-035", Module: "Epistemology", Term: "Externalism", Definition: "The view that factors determining whether a belief counts as knowledge (or is justified) can lie outside the subject's conscious awareness." },
+    { Card_ID: "EP-036", Module: "Epistemology", Term: "Fact", Definition: "A thing that is known to be true or to have occurred; a state of affairs." },
+    { Card_ID: "EP-037", Module: "Epistemology", Term: "Fallibilism", Definition: "The philosophical principle that human beings can be mistaken about their knowledge claims, and no belief is immune to revision." },
+    { Card_ID: "EP-038", Module: "Epistemology", Term: "Foundationalism", Definition: "The theory that all justified beliefs rest ultimately upon a secure foundation of basic, self-justifying beliefs." },
+    { Card_ID: "EP-039", Module: "Epistemology", Term: "Gettier problem", Definition: "Thought experiments demonstrating that justified true belief (JTB) is insufficient for knowledge because accidental luck can align a false premise with a true conclusion." },
+    { Card_ID: "EP-040", Module: "Epistemology", Term: "Hallucination", Definition: "An experience involving the apparent perception of something not actually present." },
+    { Card_ID: "EP-041", Module: "Epistemology", Term: "Hume's fork", Definition: "Hume's division of all objects of human reason into two categories: relations of ideas (a priori) and matters of fact (a posteriori)." },
+    { Card_ID: "EP-042", Module: "Epistemology", Term: "Idea", Definition: "A mental concept, image, or impression formed in the mind." },
+    { Card_ID: "EP-043", Module: "Epistemology", Term: "Illusion", Definition: "A distorted or misleading perception of a physical object actually present." },
+    { Card_ID: "EP-044", Module: "Epistemology", Term: "Infallibilism", Definition: "The view that a belief counts as knowledge only if it is impossible to be mistaken; absolute certainty is required." },
+    { Card_ID: "EP-045", Module: "Epistemology", Term: "Inference", Definition: "The process of deriving logical conclusions from premises known or assumed to be true." },
+    { Card_ID: "EP-046", Module: "Epistemology", Term: "Innate ideas / Knowledge", Definition: "Ideas or knowledge present in the mind from birth, not derived from experience (advocated by rationalists)." },
+    { Card_ID: "EP-047", Module: "Epistemology", Term: "Instrumentalism", Definition: "The view that concepts and theories are useful instruments for predicting phenomena rather than literal descriptions of reality." },
+    { Card_ID: "EP-048", Module: "Epistemology", Term: "Internalism", Definition: "The view that all factors required for a belief to be justified must be accessible to the subject's internal reflection." },
+    { Card_ID: "EP-049", Module: "Epistemology", Term: "Intuition", Definition: "Immediate understanding or apprehension of a truth without conscious reasoning." },
+    { Card_ID: "EP-050", Module: "Epistemology", Term: "Involuntary belief", Definition: "Beliefs that are formed automatically without deliberate choice or volitional control." },
+    { Card_ID: "EP-051", Module: "Epistemology", Term: "Justification", Definition: "The reasons, evidence, or grounds that render a belief rational and warranted." },
+    { Card_ID: "EP-052", Module: "Epistemology", Term: "Knowledge", Definition: "Traditionally defined as justified true belief (JTB), subject to various revisions addressing Gettier cases." },
+    { Card_ID: "EP-053", Module: "Epistemology", Term: "Locke's primary and secondary qualities", Definition: "Locke's distinction: primary qualities (shape, size, motion) belong to objects independently; secondary qualities (color, taste, sound) are powers in objects to produce sensory effects in observers." },
+    { Card_ID: "EP-054", Module: "Epistemology", Term: "Methodological doubt", Definition: "Descartes' strategy of systematically doubting any belief that can possibly be doubted in order to establish secure foundations." },
+    { Card_ID: "EP-055", Module: "Epistemology", Term: "Meno problem", Definition: "Plato's puzzle: Why is knowledge valued more than true belief if both successfully guide action?" },
+    { Card_ID: "EP-056", Module: "Epistemology", Term: "Mind-independent reality", Definition: "The existence of objects and states of affairs that do not depend on human perception or thought." },
+    { Card_ID: "EP-057", Module: "Epistemology", Term: "Naive empiricism", Definition: "An uncritical form of empiricism assuming raw sense data directly mirror objective reality." },
+    { Card_ID: "EP-058", Module: "Epistemology", Term: "Necessary condition", Definition: "A condition that must be present for a statement or state to hold (e.g. oxygen is necessary for fire)." },
+    { Card_ID: "EP-059", Module: "Epistemology", Term: "No false lemmas principle", Definition: "A proposed addition to JTB solving Gettier problems by stipulating that knowledge cannot be inferred from any false premise (lemma)." },
+    { Card_ID: "EP-060", Module: "Epistemology", Term: "Nominalism", Definition: "The view that general or abstract terms exist only as names, with no corresponding real universals." },
+    { Card_ID: "EP-061", Module: "Epistemology", Term: "Non-inferential justification", Definition: "Justification for a belief that does not depend on inference from other beliefs (basic beliefs)." },
+    { Card_ID: "EP-062", Module: "Epistemology", Term: "Objective truth", Definition: "Truth that is independent of what anyone thinks, feels, or believes." },
+    { Card_ID: "EP-063", Module: "Epistemology", Term: "Observation", Definition: "The act of noting and recording facts or events using the senses." },
+    { Card_ID: "EP-064", Module: "Epistemology", Term: "Ontology", Definition: "The philosophical study of being, existence, and the categories of things that exist." },
+    { Card_ID: "EP-065", Module: "Epistemology", Term: "Perception", Definition: "The process of organizing and interpreting sensory information to recognize environmental objects and events." },
+    { Card_ID: "EP-066", Module: "Epistemology", Term: "Phenomenalism", Definition: "The anti-realist view that physical objects are logical constructions out of actual and possible sense-data." },
+    { Card_ID: "EP-067", Module: "Epistemology", Term: "Plato's tripartite view", Definition: "The definition of knowledge as Tripartite: Justified True Belief (JTB)." },
+    { Card_ID: "EP-068", Module: "Epistemology", Term: "Primary qualities", Definition: "Inherent qualities of objects (extension, figure, motion) that are inseparable from the object itself." },
+    { Card_ID: "EP-069", Module: "Epistemology", Term: "Proposition", Definition: "The underlying meaning of a declarative sentence that can be true or false." },
+    { Card_ID: "EP-070", Module: "Epistemology", Term: "Propositional knowledge", Definition: "Knowledge-that; knowledge of factual statements or propositions." },
+    { Card_ID: "EP-071", Module: "Epistemology", Term: "Pyrrhonian skepticism", Definition: "An ancient school of skepticism advocating suspension of judgement (epoché) to attain mental tranquility (ataraxia)." },
+    { Card_ID: "EP-072", Module: "Epistemology", Term: "Rationalism", Definition: "The epistemological view that reason is the primary source of knowledge and justification, independent of sense experience." },
+    { Card_ID: "EP-073", Module: "Epistemology", Term: "Realism", Definition: "The view that entities exist independently of our conceptual schemes, perceptions, or linguistic practices." },
+    { Card_ID: "EP-074", Module: "Epistemology", Term: "Reason", Definition: "The capacity for consciously making sense of things, establishing and verifying facts, and applying logic." },
+    { Card_ID: "EP-075", Module: "Epistemology", Term: "Reliabilism", Definition: "An externalist theory holding that a belief is justified if and only if it is produced by a cognitive process that reliably generates true beliefs." },
+    { Card_ID: "EP-076", Module: "Epistemology", Term: " Russell's problem of induction", Definition: "The philosophical challenge questioning whether inductive reasoning can be justified rationally without circularity." },
+    { Card_ID: "EP-077", Module: "Epistemology", Term: "Secondary qualities", Definition: "Powers in objects to produce subjective sensory experiences like color, sound, and taste in observers." },
+    { Card_ID: "EP-078", Module: "Epistemology", Term: "Sensation", Definition: "The immediate raw subjective reaction triggered by sensory receptor stimulation." },
+    { Card_ID: "EP-079", Module: "Epistemology", Term: "Sense-data", Definition: "The immediate objects of perception in indirect realism—mental items that represent external physical objects." },
+    { Card_ID: "EP-080", Module: "Epistemology", Term: "Skepticism", Definition: "The philosophical stance questioning the possibility of knowledge or challenging specific knowledge claims." },
+    { Card_ID: "EP-081", Module: "Epistemology", Term: "Solipsism", Definition: "The extreme view that only one's own mind is sure to exist." },
+    { Card_ID: "EP-082", Module: "Epistemology", Term: "Substantial change", Definition: "A fundamental change in what kind of thing an object is." },
+    { Card_ID: "EP-083", Module: "Epistemology", Term: "Sufficient condition", Definition: "A condition that, if met, guarantees that a given statement or state holds." },
+    { Card_ID: "EP-084", Module: "Epistemology", Term: "Tabula rasa", Definition: "Locke's empiricist view of the mind at birth as a blank slate upon which experience writes." },
+    { Card_ID: "EP-085", Module: "Epistemology", Term: "Testimony", Definition: "Statements or assertions made by others serving as a source of information and belief." },
+    { Card_ID: "EP-086", Module: "Epistemology", Term: "Truth", Definition: "The property of representing things as they actually are; correspondence with reality." },
+    { Card_ID: "EP-087", Module: "Epistemology", Term: "Undefeated justified true belief", Definition: "A response to Gettier cases defining knowledge as a JTB that possesses no undefeated defeaters." },
+    { Card_ID: "EP-088", Module: "Epistemology", Term: "Universalism", Definition: "The belief that certain values, truths, or principles apply universally to all people across all contexts." },
+    { Card_ID: "EP-089", Module: "Epistemology", Term: "Virtue epistemology", Definition: "An epistemological approach evaluating beliefs based on the intellectual virtues (e.g. intellectual courage, open-mindedness) of the agent." },
+    { Card_ID: "EP-090", Module: "Epistemology", Term: "Warrant (Plantinga)", Definition: "Alvin Plantinga's term for the property that turns true belief into knowledge, produced by properly functioning cognitive faculties working in an appropriate environment." },
+
     // METAPHYSICS OF GOD
     { Card_ID: "MG-001", Module: "Metaphysics of God", Term: "A posteriori argument", Definition: "An argument in which at least one premise is a posteriori." },
     { Card_ID: "MG-002", Module: "Metaphysics of God", Term: "A priori argument", Definition: "An argument in which all of the premises are a priori." },
